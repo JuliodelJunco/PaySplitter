@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/themes.xml -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base app theme -->
+    <style name="Theme.PaySplitter" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary color -->
+        <item name="colorPrimary">@color/purple40</item>
+        <item name="colorPrimaryVariant">@color/purple80</item>
+        <item name="colorOnPrimary">@color/text</item>
+
+        <!-- Secondary color -->
+        <item name="colorSecondary">@color/purple_grey40</item> <!-- PurpleGrey40 -->
+        <item name="colorSecondaryVariant">@color/purple_grey80</item> <!-- PurpleGrey80 -->
+        <item name="colorOnSecondary">@color/text</item>
+
+        <!-- Tertiary color -->
+        <item name="colorTertiary">@color/pink40</item> <!-- Pink40 -->
+        <item name="colorOnTertiary">@color/text</item>
+
+        <!-- Background / surface -->
+        <item name="android:colorBackground">@color/back</item>
+        <item name="colorSurface">@color/text</item>
+        <item name="colorOnSurface">@color/text</item>
+        <item name="android:textColor">@color/text</item>
+
+        <item name="materialButtonStyle">@style/MyButtonStyle</item>
+
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.Material3.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+        <item name="cornerRadius">4dp</item>
+        <item name="android:textColor">@color/button_text</item>
+    </style>
+    <style name="Theme.MyApp.Switch" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlActivated">@color/text</item>
+        <item name="colorSwitchThumbNormal">@color/purple_grey40</item>
+    </style>
+</resources>

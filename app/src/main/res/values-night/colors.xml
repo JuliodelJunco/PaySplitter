@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple40">#6650A4</color>
+    <color name="purple_grey40">#625B71</color>
+    <color name="pink40">#7D5260</color>
+    <color name="text">#FFFFFF</color>
+    <color name="back">#000000</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="purple80">#D0BCFF</color>
+    <color name="purple_grey80">#CCC2DC</color>
+    <color name="pink80">#EFB8C8</color>
+    <color name="green">#00FF00</color>
+    <color name="red">#FF0000</color>
+
+
+</resources>

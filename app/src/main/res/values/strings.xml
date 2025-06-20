@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name" translatable="false">   PaySplitter</string>
+    <string name="server_client_id" translatable="false">1078099782062-tiu4id9rbjft088u1h5vm3q5rtq4mqql.apps.googleusercontent.com</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="delete_confirmation_title">Confirm Deletion</string>
+    <string name="delete_confirmation_message">Are you sure you want to delete</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="link_warning">Link can\'t be empty</string>
+    <string name="group_loaded">Group loaded successfully</string>
+    <string name="group_loading_error">An error occurred loading the group</string>
+    <string name="already_in_group">You are already in this group</string>
+    <string name="me"> (Me)</string>
+    <string name="groups">Groups: </string>
+    <string name="no_groups">No groups</string>
+    <string name="expense_name_hint">Expense name</string>
+    <string name="creditor_hint">Amount paid</string>
+    <string name="creditors_label">Total amount paid by creditors: </string>
+    <string name="debtors_label">Total amount paid by debtors: </string>
+    <string name="amount_hint">Amount</string>
+    <string name="expense_name_warning">Introduce a name for the expense</string>
+    <string name="creditors_debtors_warning">You must add at least one creditor and debtor</string>
+    <string name="equal_valid">Verify that both amounts are equal and not zero</string>
+    <string name="unequal_valid">Verify that debtors amount and creditors amount are equal and not zero</string>
+    <string name="percentage_valid">Verify that debtors amount and creditors amount are equal and not zero and that the percentages sum up to 100</string>
+    <string name="expense_name_in_use">This expense name is already in use</string>
+    <string name="expense_name_missing">The expense must have a name</string>
+    <string name="delete">Delete</string>
+    <string name="group_name_hint">Group name</string>
+    <string name="group_name_in_use">This group name is already in use</string>
+    <string name="group_name_missing">The group must have a name</string>
+    <string name="group_created_title">Group created</string>
+    <string name="group">The group </string>
+    <string name="created_message">has been created successfully</string>
+    <string name="copy_code">Copy group code </string>
+    <string name="copied_text">Copied Text</string>
+    <string name="copied">Copied!</string>
+    <string name="group_creating_error">An error occurred creating the group</string>
+    <string name="owes_to"> owes to </string>
+    <string name="pay_debt">Pay Debt</string>
+    <string name="debt_paid">Debt paid</string>
+    <string name="debt_paid_error">An error occurred paying the debt</string>
+    <string name="debt_message">The debt between </string>
+    <string name="and"> and </string>
+    <string name="has_been_paid"> has been paid successfully</string>
+    <string name="payed_by">Paid by:</string>
+    <string name="debtors">Debtors:</string>
+    <string name="edited_expense">Expense edited</string>
+    <string name="expense">Expense </string>
+    <string name="correctly_edited"> has been edited successfully</string>
+    <string name="group_code">Group Code:</string>
+    <string name="no_expenses">No expenses</string>
+    <string name="expense_created">Expense created</string>
+    <string name="expense_loading_error">An error occurred loading the expense</string>
+    <string name="group_deleting_error">An error occurred deleting the group</string>
+    <string name="group_deleting_title">Group deleted</string>
+    <string name="deleted_message">has been deleted successfully</string>
+    <string name="group_edited_title">Group edited</string>
+    <string name="login_failed">Login failed</string>
+    <string name="login_canceled">Login canceled</string>
+    <string name="error_initializing">Error initializing app</string>
+    <string name="create_group_button_text">Create new group</string>
+    <string name="enter_group_button_text">Enter new group</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter">Enter</string>
+    <string name="enter_group_hint">Introduce the group code</string>
+    <string name="save_expense_button_text">Save Expense</string>
+    <string name="participants">Participants: </string>
+    <string name="save">Save</string>
+    <string name="loading">Loading…</string>
+    <string name="back">Back</string>
+    <string name="expense_amount">Expense amount</string>
+    <string name="delete_expense_button_text">Delete Expense</string>
+    <string name="edit_expense_button_text">Edit Expense</string>
+    <string name="expenses">Expenses: </string>
+    <string name="delete_group_button_text">Leave Group</string>
+    <string name="edit_group_button_text">Edit Group</string>
+    <string name="view_debts_button_text">View Debts</string>
+    <string name="new_expense_button_text">New Expense</string>
+    <string-array name="distribution_options">
+        <item>Equal distribution</item>
+        <item>Percentage distribution</item>
+        <item>Unequal distribution</item>
+    </string-array>
+    <string name="dark_theme">Dark theme</string>
+    <string name="light_theme">Light theme</string>
+    <string name="language" translateable="false">Language</string>
+    <string name="distribution">Type of distribution</string>
+    <string name="debts">Debts:</string>
+    <string-array name="language_options" translateable="false">
+        <item>English</item>
+        <item>Español</item>
+        <item>Français</item>
+    </string-array>
+    <string-array name="language_codes" translateable="false">
+        <item>en</item>
+        <item>es</item>
+        <item>fr</item>
+    </string-array>
+</resources>
