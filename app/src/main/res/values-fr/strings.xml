@@ -76,6 +76,11 @@
     <string name="view_debts_button_text">Voir les dettes</string>
     <string name="new_expense_button_text">Nouvelles dépenses</string>
     <string name="distribution">Type de répartition</string>
+    <string name="creditors_hint">Le montant total est la somme du montant payé </string>
+    <string name="equal_hint">Le montant total est divisé de manière égale entre les participants</string>
+    <string name="percentage_hint">La somme des pourcentages doit être égale à 100</string>
+    <string name="unequal_hint">Le montant payé doit être égal au montant à payer</string>
+
     <string-array name="distribution_options">
         <item>Répartition égal</item>
         <item>Répartition en pourcentage</item>

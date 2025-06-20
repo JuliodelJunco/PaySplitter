@@ -190,7 +190,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
 
                         checkNumber(input,amountInput,this);
                         getTotalCredit();
-                        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())));
+                        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.creditors_hint)));
                     }
                 });
                 row.addView(amountInput);
@@ -199,7 +199,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
         }
         //Gets the total amount of the creditors checked
         getTotalCredit();
-        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())));
+        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.creditors_hint)));
 
         for (User participant : group.getParticipants()) {
             CheckBox participantCheckbox = new CheckBox(this);
@@ -233,7 +233,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
 
                         checkNumber(auxInput,input,this);
                         getTotalDebt();
-                        debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())));
+                        debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.unequal_hint)));
                     }
                 });
                 row.addView(input);
@@ -243,7 +243,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
         }
         //Gets the total amount of the debtors checked
         getTotalDebt();
-        debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())));
+        debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.unequal_hint)));
         //Goes back to the previous screen
         cancelButton.setOnClickListener(v -> {
             setResult(RESULT_CANCELED);
@@ -342,7 +342,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
 
                         updateScreen();
                         getTotalCredit();
-                        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())));
+                        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.creditors_hint)));
                     }
                 });
 
@@ -356,7 +356,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
 
         //Updates the total credit
         getTotalCredit();
-        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())));
+        creditLabel.setText(String.format(getText(R.string.creditors_label) + "%.2f%s", totalCredit, group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.creditors_hint)));
 
         //Checks for new debtors added to add an input for their amount
         for (int i = 0; i < debtorsContainer.getChildCount(); i++) {
@@ -385,7 +385,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
                             input.setText((Objects.equals(distributionType, "percentage")) ? (debt > 0 ? String.valueOf((double) Math.round((debt / totalCredit) * 10000) / 100) : "") : (debt > 0 ? String.valueOf((double) Math.round(debt * 100) / 100) : ""));
                         }
                     }
-                    input.setHint((!Objects.equals(distributionType, "percentage")) ? getString(R.string.amount_hint) : "%");
+                    input.setHint((!Objects.equals(distributionType, "percentage")) ? getString(R.string.amount_hint) : getString(R.string.amount_hint)+" %");
                     input.setEnabled(true);
                     input.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -401,7 +401,17 @@ public class ExpenseFormManagement extends AppCompatActivity {
                             checkNumber(auxInput,input,this);
                             //Sets the total debt
                             getTotalDebt();
-                            debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())));
+                            switch (distributionType) {
+                                case "equal":
+                                    debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalCredit , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.equal_hint)));
+                                    break;
+                                case "percentage":
+                                    debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.percentage_hint)));
+                                    break;
+                                case "unequal":
+                                    debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.unequal_hint)));
+                                    break;
+                            }
                         }
                     });
                 }
@@ -415,11 +425,16 @@ public class ExpenseFormManagement extends AppCompatActivity {
         //Set the previous distribution type for adding correctly the amounts in getTotalDebt
         previousDistributionType = distributionType;
         //Updates the screen depending on the distribution type
-        if (Objects.equals(distributionType, "equal")){
-            debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalCredit , group.getCurrency().getSymbol(group.getCurrency())));
-        }else{
-            getTotalDebt();
-            debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())));
+        switch (distributionType) {
+            case "equal":
+                debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalCredit , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.equal_hint)));
+                break;
+            case "percentage":
+                debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.percentage_hint)));
+                break;
+            case "unequal":
+                debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.unequal_hint)));
+                break;
         }
     }
     //Counts the debtors checked to know how to divide the debt
@@ -532,7 +547,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
             Toast.makeText(this, R.string.expense_name_missing, Toast.LENGTH_LONG).show();
         }
     }
-    // Checks if the string providedis a valid number
+    // Checks if the string provided is a valid number
     private void checkNumber(String input, EditText amountInput, TextWatcher textWatcher) {
         if (input.matches("\\.\\d{0,2}")) {
             amountInput.removeTextChangedListener(textWatcher);

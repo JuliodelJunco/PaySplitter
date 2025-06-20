@@ -76,6 +76,10 @@
     <string name="view_debts_button_text">Ver deudas</string>
     <string name="new_expense_button_text">Nuevo gasto</string>
     <string name="distribution">Tipo de reparto</string>"
+    <string name="creditors_hint">El total es la cantidad que se ha pagado </string>
+    <string name="equal_hint">El total es dividido igualmente entre los participantes</string>
+    <string name="percentage_hint">La suma de los porcentajes debe ser 100</string>
+    <string name="unequal_hint">La cantidad pagada debe ser igual a la cantidad a pagar</string>
     <string-array name="distribution_options">
         <item>Igualmente distribuido</item>
         <item>Distribución porcentual</item>
