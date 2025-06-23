@@ -154,7 +154,7 @@ public class ExpenseFormManagement extends AppCompatActivity {
         expenseNameInput.setText(expense.getName());
 
         User user = apiController.getUser();
-        //Puts the participants of the group as choosable for being creditors or debtors
+        //Puts the participants of the group as able to choose for being creditors or debtors
         for (User participant : group.getParticipants()) {
             CheckBox payerCheckbox = new CheckBox(this);
             if(!participant.equals(user)) {

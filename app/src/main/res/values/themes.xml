@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- res/values/themes.xml -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Base app theme -->
     <style name="Theme.PaySplitter" parent="Theme.Material3.DayNight.NoActionBar">

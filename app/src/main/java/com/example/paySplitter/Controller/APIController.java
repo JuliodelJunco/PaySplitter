@@ -25,14 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 public final class APIController {
     //Singleton implementation for APIController
     private static APIController instance;
     private Drive driveService;
     private User user;
-    private Map<String,JSONObject> metadatas = new HashMap<>();
+    private final Map<String,JSONObject> metadatas = new HashMap<>();
     //set the API to use
     public void setAPIController(Drive driveService, User user) {
         this.driveService = driveService;
@@ -51,7 +50,7 @@ public final class APIController {
     public ArrayList<Group> loadGroupNames() {
         ArrayList<Group> groups = new ArrayList<>();
         try {
-            String appFolderId = getOrCreateFolder("PaySplitter", null);
+            String appFolderId = getOrCreateFolder();
             HashSet<String> groupFolders = listFoldersInFolder(appFolderId);
 
             for (String folderId : groupFolders) {
@@ -67,9 +66,11 @@ public final class APIController {
                 File metadataFile = findFileInFolder(folderId, "metadata.json");
 
 
+                assert metadataFile != null;
                 String metadataJson = downloadFileContent(metadataFile.getId());
+                assert metadataJson != null;
                 JSONObject metadata = new JSONObject(metadataJson);
-                if (metadata != null) metadatas.put(folderId, metadata);
+                metadatas.put(folderId, metadata);
                 // Only shows groups that the user is in
                 JSONArray participantsJson = metadata.getJSONArray("participants");
                 boolean valid = false;
@@ -100,6 +101,7 @@ public final class APIController {
             if (metadataFile == null) throw new RuntimeException("Metadata file not found");
 
             String metadataJson = downloadFileContent(metadataFile.getId());
+            assert metadataJson != null;
             JSONObject metadata = new JSONObject(metadataJson);
 
             JSONArray participantsJson = metadata.getJSONArray("participants");
@@ -121,7 +123,7 @@ public final class APIController {
                 File shortcutMetadata = new File();
                 shortcutMetadata.setName(metadata.getString("name"));
                 shortcutMetadata.setMimeType("application/vnd.google-apps.shortcut");
-                shortcutMetadata.setParents(Collections.singletonList(getOrCreateFolder("PaySplitter", null)));
+                shortcutMetadata.setParents(Collections.singletonList(getOrCreateFolder()));
                 shortcutMetadata.setShortcutDetails(new File.ShortcutDetails().setTargetId(folderId));
 
                 driveService.files().create(shortcutMetadata).setFields("id").execute();
@@ -130,7 +132,7 @@ public final class APIController {
                 p.put("name", user.getName());
                 p.put("gmail", user.getGmail());
                 ArrayList<User> participantsList = loadUsersFromArray(participantsJson);
-                Set participantSet = new HashSet(participantsList);
+                Set<User> participantSet = new HashSet<>(participantsList);
                 if(!participantSet.contains(user)) participantsJson.put(p);
                 metadata.put("participants", participantsJson);
                 uploadFileContent(metadataFile.getId(), metadata.toString());
@@ -174,6 +176,7 @@ public final class APIController {
             for (File file : files) {
                 if (file.getName().endsWith(".expense.json")) {
                     String jsonContent = downloadFileContent(file.getId());
+                    assert jsonContent != null;
                     JSONObject e = new JSONObject(jsonContent);
                     Expense expense = new Expense();
                     expense.setName(e.getString("name"));
@@ -183,7 +186,6 @@ public final class APIController {
 
                 group.setExpenses(expenses);
             }
-            if(group == null) throw new RuntimeException("Group not found");
             return group;
         }catch (Exception e){
             e.printStackTrace();
@@ -196,7 +198,9 @@ public final class APIController {
             String folderId = group.getId();
             ArrayList<User> participants = group.getParticipants();
             File file = findFileInFolder(folderId, expenseName + ".expense.json");
+            assert file != null;
             String jsonContent = downloadFileContent(file.getId());
+            assert jsonContent != null;
             JSONObject e = new JSONObject(jsonContent);
             // Set the expense
             Expense expense = new Expense();
@@ -221,7 +225,6 @@ public final class APIController {
                 debtors.put(u, debt.getJSONObject(key).getDouble("amount"));
             }
             expense.setDebtors(debtors);
-            if(expense == null) throw new RuntimeException("Expense not found");
             return expense;
         }catch (Exception e){
             e.printStackTrace();
@@ -241,7 +244,7 @@ public final class APIController {
     // Adds a new group to the PaySplitter folder
     public void addGroup(Group newGroup) {
         try {
-            String appFolderId = getOrCreateFolder("PaySplitter", null);
+            String appFolderId = getOrCreateFolder();
 
             File groupFolderMetadata = new File();
             groupFolderMetadata.setName(newGroup.getName());
@@ -255,7 +258,7 @@ public final class APIController {
 
             Permission permission = new Permission()
                 .setType("anyone")
-                .setRole("fileOrganizer");
+                .setRole("writer");
             driveService.permissions().create(groupFolderId, permission)
                     .setSendNotificationEmail(false)
                     .execute();
@@ -299,6 +302,7 @@ public final class APIController {
             String folderId = group.getId();
 
             JSONObject metadata = metadatas.get(folderId);
+            assert metadata != null;
             metadata.put("name", group.getName());
             metadata.put("currency", group.getCurrency().name());
             //Check change in participants and call setParticipants if needed
@@ -330,6 +334,7 @@ public final class APIController {
                 participantArray.put(p);
             }
             // Check change in participants and call setExpenses if needed
+            assert metadata != null;
             if(participantArray.length() < metadata.getJSONArray("participants").length()){
                 metadata.put("participants", participantArray);
                 setExpenses(folderId,group.getDebts(),group.getBalances(),group.getExpenses());
@@ -365,6 +370,7 @@ public final class APIController {
                     }
                 });
             }
+            assert metadata != null;
             metadata.put("debts", debtArray);
 
             JSONArray balancesArray = new JSONArray();
@@ -401,7 +407,7 @@ public final class APIController {
         }
     }
     // Set a specific expense
-    public Future<?> setExpense(String folderId, ArrayList<Debt> debts, Map<User, Balance> balances, Expense expense) {
+    public void setExpense(String folderId, ArrayList<Debt> debts, Map<User, Balance> balances, Expense expense) {
         try {
 
             JSONObject metadata = metadatas.get(folderId);
@@ -419,6 +425,7 @@ public final class APIController {
                     }
                 });
             }
+            assert metadata != null;
             metadata.put("debts", debtArray);
 
             JSONArray balancesArray = new JSONArray();
@@ -444,6 +451,7 @@ public final class APIController {
             File file = findFileInFolder(folderId, expense.getName() + ".expense.json");
             if (file != null) {
                 String expenseFile = downloadFileContent(file.getId());
+                assert expenseFile != null;
                 JSONObject expenseJson = new JSONObject(expenseFile);
                 addExpense(expense, folderId, expenseJson);
             }else{
@@ -453,7 +461,6 @@ public final class APIController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
     }
     //Deletes the debt from the group folder
     public void deleteExpense(String folderId, ArrayList<Debt> debts, Map<User, Balance> balances, Expense expense) {
@@ -474,6 +481,7 @@ public final class APIController {
                     }
                 });
             }
+            assert metadata != null;
             metadata.put("debts", debtArray);
 
             JSONArray balancesArray = new JSONArray();
@@ -497,6 +505,7 @@ public final class APIController {
                 uploadFileContent(metadataFile.getId(), metadata.toString());
             }
             File file = findFileInFolder(folderId, expense.getName() + ".expense.json");
+            assert file != null;
             driveService.files().delete(file.getId());
 
 
@@ -555,6 +564,7 @@ public final class APIController {
                 driveService.files().create(fileMetadata, content).setFields("id").execute();
             } else {
                 File file = findFileInFolder(folderId, payment.getName() + ".expense.json");
+                assert file != null;
                 uploadFileContent(file.getId(), expenseJson.toString());
             }
         } catch (Exception e) {
@@ -589,7 +599,7 @@ public final class APIController {
         HashSet<String> folderIds = new HashSet<>();
         for (File groupFolder : result.getFiles()) {
             String folderId = groupFolder.getId();
-            // Detectar si es un acceso directo
+            // Deal with shortcuts
             File folderMeta = driveService.files().get(folderId)
                     .setFields("id, mimeType, shortcutDetails/targetId")
                     .execute();
@@ -635,8 +645,7 @@ public final class APIController {
         try{
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
-            String string = outputStream.toString("UTF-8");
-            return string;
+            return outputStream.toString(StandardCharsets.UTF_8);
         }catch (Exception e) {
             return null;
         }
@@ -650,11 +659,8 @@ public final class APIController {
                 .execute();
     }
     // Creates a new folder with the given name in the given parent folder
-    private String getOrCreateFolder(String name, String parentId) throws Exception {
-        String query = "name = '" + name + "' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
-        if (parentId != null) {
-            query += " and '" + parentId + "' in parents";
-        }
+    private String getOrCreateFolder() throws Exception {
+        String query = "name = '" + "PaySplitter" + "' and mimeType = 'application/vnd.google-apps.folder' and trashed = false";
         FileList result = driveService.files().list()
                 .setQ(query)
                 .setFields("files(id, name)")
@@ -665,11 +671,8 @@ public final class APIController {
         }
 
         File fileMetadata = new File();
-        fileMetadata.setName(name);
+        fileMetadata.setName("PaySplitter");
         fileMetadata.setMimeType("application/vnd.google-apps.folder");
-        if (parentId != null) {
-            fileMetadata.setParents(Collections.singletonList(parentId));
-        }
 
         File folder = driveService.files().create(fileMetadata)
                 .setFields("id")
