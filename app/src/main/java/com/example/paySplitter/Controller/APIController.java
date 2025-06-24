@@ -171,19 +171,16 @@ public final class APIController {
                 group.setBalances(balances);
             }
 
-            List<File> files = listFilesInFolder(folderId);
-            ArrayList<Expense> expenses = new ArrayList<>();
-            for (File file : files) {
-                if (file.getName().endsWith(".expense.json")) {
-                    String jsonContent = downloadFileContent(file.getId());
-                    assert jsonContent != null;
-                    JSONObject e = new JSONObject(jsonContent);
+            if (metadata.has("expenses")) {
+                JSONArray expensesJson = metadata.getJSONArray("expenses");
+                ArrayList<Expense> expenses = new ArrayList<>();
+                for (int i = 0; i < expensesJson.length(); i++) {
+                    JSONObject ex = expensesJson.getJSONObject(i);
                     Expense expense = new Expense();
-                    expense.setName(e.getString("name"));
-                    expense.setAmount(e.getDouble("amount"));
+                    expense.setName(ex.getString("name"));
+                    expense.setAmount(ex.getDouble("amount"));
                     expenses.add(expense);
                 }
-
                 group.setExpenses(expenses);
             }
             return group;
@@ -278,6 +275,7 @@ public final class APIController {
             metadata.put("participants", participantArray);
             metadata.put("debts", new JSONArray());
             metadata.put("balances", new JSONArray());
+            metadata.put("expenses", new JSONArray());
             metadatas.put(groupFolderId, metadata);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -389,16 +387,35 @@ public final class APIController {
             }
             metadata.put("balances", balancesArray);
 
+            JSONArray expensesArray = new JSONArray();
+            if (expenses != null) {
+                expenses.forEach((expense) -> {
+                    JSONObject ex = new JSONObject();
+                    try {
+                        ex.put("name", expense.getName());
+                        ex.put("amount", expense.getAmount());
+                        expensesArray.put(ex);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+            metadata.put("expenses", expensesArray);
+
+
             File metadataFile = findFileInFolder(folderId, "metadata.json");
             if (metadataFile != null) {
                 uploadFileContent(metadataFile.getId(), metadata.toString());
             }
 
             // Delete old expenses
-
-            for (File file : listFilesInFolder(folderId)) {
-                if (file.getName().endsWith(".expense.json") && !expenses.contains(file.getName().replaceFirst("\\.expense\\.json$", ""))) {
-                    driveService.files().delete(file.getId()).execute();
+            File owner = driveService.files().get(folderId).setFields("owners").execute();
+            String ownerEmail = owner.getOwners().get(0).getEmailAddress();
+            if (ownerEmail.equals(user.getGmail())) {
+                for (File file : listFilesInFolder(folderId)) {
+                    if (file.getName().endsWith(".expense.json") && !expenses.contains(file.getName().replaceFirst("\\.expense\\.json$", ""))) {
+                        driveService.files().delete(file.getId()).execute();
+                    }
                 }
             }
 
@@ -443,6 +460,18 @@ public final class APIController {
                 });
             }
             metadata.put("balances", balancesArray);
+
+            JSONArray expensesArray = metadata.getJSONArray("expenses");
+            JSONObject ex = new JSONObject();
+            try {
+                ex.put("name", expense.getName());
+                ex.put("amount", expense.getAmount());
+                expensesArray.put(ex);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            metadata.put("expenses", expensesArray);
+
 
             File metadataFile = findFileInFolder(folderId, "metadata.json");
             if (metadataFile != null) {
@@ -499,14 +528,31 @@ public final class APIController {
                 });
             }
             metadata.put("balances", balancesArray);
+            // Check for the deleted expense in the metadata and deletes it
+            if (metadata.has("expenses")) {
+                JSONArray expensesJson = metadata.getJSONArray("expenses");
+                JSONArray newExpensesArray = new JSONArray();
+                for (int i = 0; i < expensesJson.length(); i++) {
+                    JSONObject ex = expensesJson.getJSONObject(i);
+                    if(!expense.getName().equals(ex.getString("name"))) {
+                        newExpensesArray.put(ex);
+                    }
+                }
+                metadata.put("expenses", newExpensesArray);
+            }
 
             File metadataFile = findFileInFolder(folderId, "metadata.json");
             if (metadataFile != null) {
                 uploadFileContent(metadataFile.getId(), metadata.toString());
             }
+            //Delete the expense
             File file = findFileInFolder(folderId, expense.getName() + ".expense.json");
             assert file != null;
-            driveService.files().delete(file.getId());
+            File owner = driveService.files().get(folderId).setFields("owners").execute();
+            String ownerEmail = owner.getOwners().get(0).getEmailAddress();
+            if (ownerEmail.equals(user.getGmail())) {
+                driveService.files().delete(file.getId()).execute();
+            }
 
 
         } catch (Exception e) {
