@@ -43,6 +43,6 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=JuliodelJunco_PaySplitter
-            -Dsonar.organization=JuliodelJunco
+            -Dsonar.organization=juliodeljunco
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
