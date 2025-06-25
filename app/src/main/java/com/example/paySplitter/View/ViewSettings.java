@@ -13,6 +13,7 @@ import android.transition.Fade;
 import android.transition.Transition;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,10 +25,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.paySplitter.App;
+import com.example.paySplitter.Controller.APIController;
 import com.example.paySplitter.Controller.LocaleHelper;
 import com.example.paySplitter.Controller.SimpleItemSelectedListener;
 import com.example.paySplitter.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.api.services.drive.DriveScopes;
 
 import java.util.Locale;
 
@@ -35,7 +42,9 @@ public class ViewSettings extends AppCompatActivity {
 
     private SwitchMaterial themeSwitch;
     private Spinner languageSpinner;
+    private Button logOutButton;
     private SharedPreferences prefs;
+    private APIController apiController = APIController.getInstance();
     private boolean isApplyingChanges = false;
 
     // Modified to use LocaleHelper
@@ -64,6 +73,7 @@ public class ViewSettings extends AppCompatActivity {
             // Initialize views and toolbar (unchanged)
             themeSwitch = findViewById(R.id.switch_theme);
             languageSpinner = findViewById(R.id.spinner_language);
+            logOutButton = findViewById(R.id.log_out_button);
             Toolbar toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -115,6 +125,26 @@ public class ViewSettings extends AppCompatActivity {
                 String langCode = getResources().getStringArray(R.array.language_codes)[pos];
                 setAppLocale(langCode);
             }));
+
+            logOutButton.setOnClickListener(v -> {
+                GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .requestScopes(new Scope(DriveScopes.DRIVE))
+                        .build();
+
+                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+                googleSignInClient.signOut().addOnCompleteListener(task -> {
+                    //Deletes sharedPreferences
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.apply();
+
+                    Intent intent = new Intent(this, App.class);
+                    //Resets the app before logging out
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                });
+            });
 
             isApplyingChanges = false;
 

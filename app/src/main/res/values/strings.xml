@@ -92,6 +92,7 @@
     <string name="equal_hint">The amount is divided equally among the participants</string>
     <string name="percentage_hint">The sum of the percentages has to be 100</string>
     <string name="unequal_hint">The total amount of the debtors has to be equal to the total amount of the creditors</string>
+    <string name="log_out_button_text">Log Out</string>
     <string-array name="language_options" translateable="false">
         <item>English</item>
         <item>Español</item>

@@ -71,7 +71,7 @@
     <string name="delete_expense_button_text">Eliminar gasto</string>
     <string name="edit_expense_button_text">Editar gasto</string>
     <string name="expenses">Gastos: </string>
-    <string name="delete_group_button_text">Salir del grupo</string>
+    <string name="delete_group_button_text">Abandonar el grupo</string>
     <string name="edit_group_button_text">Editar grupo</string>
     <string name="view_debts_button_text">Ver deudas</string>
     <string name="new_expense_button_text">Nuevo gasto</string>
@@ -80,6 +80,7 @@
     <string name="equal_hint">El total es dividido igualmente entre los participantes</string>
     <string name="percentage_hint">La suma de los porcentajes debe ser 100</string>
     <string name="unequal_hint">La cantidad pagada debe ser igual a la cantidad a pagar</string>
+    <string name="log_out_button_text">Cerrar Sesión</string>
     <string-array name="distribution_options">
         <item>Igualmente distribuido</item>
         <item>Distribución porcentual</item>
