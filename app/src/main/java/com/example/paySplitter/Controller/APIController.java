@@ -1,5 +1,7 @@
 package com.example.paySplitter.Controller;
 
+import android.os.Build;
+
 import com.example.paySplitter.Model.Balance;
 import com.example.paySplitter.Model.Currency;
 import com.example.paySplitter.Model.Debt;
@@ -691,7 +693,11 @@ public final class APIController {
         try{
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             driveService.files().get(fileId).executeMediaAndDownloadTo(outputStream);
-            return outputStream.toString(StandardCharsets.UTF_8);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                return outputStream.toString(StandardCharsets.UTF_8);
+            } else {
+                return outputStream.toString();
+            }
         }catch (Exception e) {
             return null;
         }
