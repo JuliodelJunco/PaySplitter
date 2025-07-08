@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -128,6 +129,12 @@ public class ViewDebt extends AppCompatActivity {
             debtList.addView(debtItem);
         }
         // Goes back to the group screen
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                backButton.performClick();
+            }
+        });
         backButton.setOnClickListener(v -> {
             setContentView(R.layout.loading);
             final Group[] finalGroup = {group};

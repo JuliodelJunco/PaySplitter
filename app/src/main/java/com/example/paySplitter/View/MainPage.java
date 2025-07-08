@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -153,7 +154,17 @@ public class MainPage extends AppCompatActivity {
                 ((TextView) view).setTypeface(typeface);
             }
         }
+        //If the back button is pressed, the app is minimized
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
+            }
+        });
         groupContainer.removeViews(0, groupContainer.getChildCount() - 2);
         if (groups != null) {
             for (Group group : groups) {

@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -185,6 +186,12 @@ public class ViewGroup extends AppCompatActivity implements DeleteConfirmation.D
         //Call to create a new expense
         newBtn.setOnClickListener(v -> newExpense());
         //Back button
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                backButton.performClick();
+            }
+        });
         backButton.setOnClickListener(v -> {
             setContentView(R.layout.loading);
             final ArrayList<Group>[] groups = new ArrayList[]{new ArrayList<>()};

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -168,6 +169,12 @@ public class ViewExpense extends AppCompatActivity implements DeleteConfirmation
             editExpense();
         });
         //Back button
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                backButton.performClick();
+            }
+        });
         backButton.setOnClickListener(v -> {
             setContentView(R.layout.loading);
             final Group[] finalGroup = {group};

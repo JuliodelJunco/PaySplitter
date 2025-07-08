@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -245,6 +246,12 @@ public class ExpenseFormManagement extends AppCompatActivity {
         getTotalDebt();
         debtLabel.setText(String.format(getText(R.string.debtors_label) + "%.2f%s", totalDebt , group.getCurrency().getSymbol(group.getCurrency())+" " + getText(R.string.unequal_hint)));
         //Goes back to the previous screen
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                cancelButton.performClick();
+            }
+        });
         cancelButton.setOnClickListener(v -> {
             setResult(RESULT_CANCELED);
             finish();

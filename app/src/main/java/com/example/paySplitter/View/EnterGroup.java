@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -104,6 +105,12 @@ public class EnterGroup extends AppCompatActivity {
             }
         });
         //Goes back to the main page
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                cancelButton.performClick();
+            }
+        });
         cancelButton.setOnClickListener(v -> {
             Intent intent = new Intent(EnterGroup.this, MainPage.class);
             intent.putExtra("groups", groups);

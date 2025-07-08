@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -160,6 +161,12 @@ public class GroupFormManagement extends AppCompatActivity implements DeleteConf
             participantList.addView(row);
         }
         // Goes back to the previous screen
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                cancelBtn.performClick();
+            }
+        });
         cancelBtn.setOnClickListener(v -> finish());
         //Saves the group
         saveBtn.setOnClickListener(v -> {
